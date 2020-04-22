@@ -29,6 +29,8 @@ class ViewController: UIViewController {
     func setupCollectionView() {
         self.collectionView.collectionViewLayout = columnLayout
         self.collectionView.dataSource = self
+        self.collectionView.dragDelegate = self
+        self.collectionView.dragInteractionEnabled = true
     }
 }
 
@@ -36,19 +38,21 @@ extension ViewController: UICollectionViewDataSource {
     func collectionView(_ collectionView: UICollectionView, numberOfItemsInSection section: Int) -> Int {
         return self.cellDataList.count
     }
-    
+
     func collectionView(_ collectionView: UICollectionView, cellForItemAt indexPath: IndexPath) -> UICollectionViewCell {
         let cell = collectionView.dequeueReusableCell(withReuseIdentifier: "DragDrogCollectionViewCell", for: indexPath) as! DragDrogCollectionViewCell
         cell.backgroundColor = UIColor.yellow
         return cell
     }
-    
-    
-    
-    
-    
-    
+}
 
+extension ViewController: UICollectionViewDragDelegate {
+    func collectionView(_ collectionView: UICollectionView, itemsForBeginning session: UIDragSession, at indexPath: IndexPath) -> [UIDragItem] {
+        let attributedString = String(indexPath.item)
+        let dragItem = UIDragItem(itemProvider: NSItemProvider(object: attributedString as NSItemProviderWriting))
+        dragItem.localObject = attributedString
+        return [dragItem]
+    }
 }
 
 
