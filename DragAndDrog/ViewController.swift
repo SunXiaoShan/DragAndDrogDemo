@@ -12,7 +12,7 @@ class ViewController: UIViewController {
 
     @IBOutlet weak var collectionView: UICollectionView!
 
-    var cellDataList:[Int] = [1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14, 15]
+    var cellDataList:[Int] = [1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14]
     static let columnCount = 5
     let columnLayout = ColumnFlowLayout(
         cellsPerRow: columnCount,
@@ -41,24 +41,47 @@ class ViewController: UIViewController {
         let selected = cellDataList[fromPosition] as Int
         DispatchQueue.main.async {[weak self] in
             self?.cellDataList.remove(at: fromPosition)
-            self?.cellDataList.insert(selected, at: toPosition)
+
+            var newindex = toPosition
+            if (newindex > self?.cellDataList.count ?? 0) {
+                newindex = self?.cellDataList.count ?? 0
+            }
+            self?.cellDataList.insert(selected, at: newindex)
+
             self?.collectionView.reloadData()
             UIView.performWithoutAnimation {
                 self?.collectionView.reloadSections(IndexSet(integersIn: 0...0))
             }
         }
     }
+    
+    func getCollectionViewColumnMaxCount() -> Int {
+        return ViewController.columnCount
+    }
+    
+    func getCollectionViewRowMaxCount() -> Int {
+        return 10
+    }
 }
 
 extension ViewController: UICollectionViewDataSource {
     func collectionView(_ collectionView: UICollectionView, numberOfItemsInSection section: Int) -> Int {
-        return self.cellDataList.count
+        let maxCount = getCollectionViewColumnMaxCount() * getCollectionViewRowMaxCount()
+        let bufferCount = maxCount - (self.cellDataList.count % maxCount)
+        
+        return self.cellDataList.count + bufferCount
     }
 
     func collectionView(_ collectionView: UICollectionView, cellForItemAt indexPath: IndexPath) -> UICollectionViewCell {
         let cell = collectionView.dequeueReusableCell(withReuseIdentifier: "DragDrogCollectionViewCell", for: indexPath) as! DragDrogCollectionViewCell
-        cell.backgroundColor = UIColor.yellow
-        cell.label.text = String(cellDataList[indexPath.section * ViewController.columnCount +  indexPath.row])
+        let index = indexPath.section * ViewController.columnCount +  indexPath.row
+        cell.backgroundColor = UIColor.black
+        cell.label.text = ""
+        if (index < cellDataList.count) {
+            cell.backgroundColor = UIColor.yellow
+            cell.label.text = String(cellDataList[index])
+        }
+
         return cell
     }
 }
