@@ -32,7 +32,22 @@
                                         <collectionViewCellContentView key="contentView" opaque="NO" clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="center" insetsLayoutMarginsFromSafeArea="NO" id="NWf-rG-kfK">
                                             <rect key="frame" x="0.0" y="0.0" width="50" height="50"/>
                                             <autoresizingMask key="autoresizingMask"/>
+                                            <subviews>
+                                                <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="Label" textAlignment="natural" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="B5g-nF-rbm">
+                                                    <rect key="frame" x="4" y="14.5" width="42" height="21"/>
+                                                    <fontDescription key="fontDescription" type="system" pointSize="17"/>
+                                                    <nil key="textColor"/>
+                                                    <nil key="highlightedColor"/>
+                                                </label>
+                                            </subviews>
+                                            <constraints>
+                                                <constraint firstItem="B5g-nF-rbm" firstAttribute="centerX" secondItem="NWf-rG-kfK" secondAttribute="centerX" id="NGu-kj-dNL"/>
+                                                <constraint firstItem="B5g-nF-rbm" firstAttribute="centerY" secondItem="NWf-rG-kfK" secondAttribute="centerY" id="OrK-WS-Wnk"/>
+                                            </constraints>
                                         </collectionViewCellContentView>
+                                        <connections>
+                                            <outlet property="label" destination="B5g-nF-rbm" id="Bfy-iJ-h6c"/>
+                                        </connections>
                                     </collectionViewCell>
                                 </cells>
                             </collectionView>

@@ -11,8 +11,8 @@ import UIKit
 class ViewController: UIViewController {
 
     @IBOutlet weak var collectionView: UICollectionView!
-    
-    var cellDataList:[Any] = [1, 1, 1, 1, 1, 1, 1]
+
+    var cellDataList:[Int] = [1, 2, 3, 4, 5, 6, 7]
     let columnLayout = ColumnFlowLayout(
         cellsPerRow: 5,
         minimumInteritemSpacing: 10,
@@ -29,8 +29,23 @@ class ViewController: UIViewController {
     func setupCollectionView() {
         self.collectionView.collectionViewLayout = columnLayout
         self.collectionView.dataSource = self
-        self.collectionView.dragDelegate = self
         self.collectionView.dragInteractionEnabled = true
+        self.collectionView.dragDelegate = self
+        self.collectionView.dropDelegate = self
+    }
+
+    func updateDataIndex(from fromIndexPath: IndexPath, to toIndexPath: IndexPath) {
+        let fromPosition = fromIndexPath.item
+        let toPosition = toIndexPath.item
+        let selected = cellDataList[fromPosition] as Int
+        DispatchQueue.main.async {[weak self] in
+            self?.cellDataList.remove(at: fromPosition)
+            self?.cellDataList.insert(selected, at: toPosition)
+            self?.collectionView.reloadData()
+            UIView.performWithoutAnimation {
+                self?.collectionView.reloadSections(IndexSet(integersIn: 0...0))
+            }
+        }
     }
 }
 
@@ -42,6 +57,7 @@ extension ViewController: UICollectionViewDataSource {
     func collectionView(_ collectionView: UICollectionView, cellForItemAt indexPath: IndexPath) -> UICollectionViewCell {
         let cell = collectionView.dequeueReusableCell(withReuseIdentifier: "DragDrogCollectionViewCell", for: indexPath) as! DragDrogCollectionViewCell
         cell.backgroundColor = UIColor.yellow
+        cell.label.text = String(cellDataList[indexPath.row])
         return cell
     }
 }
@@ -52,6 +68,22 @@ extension ViewController: UICollectionViewDragDelegate {
         let dragItem = UIDragItem(itemProvider: NSItemProvider(object: attributedString as NSItemProviderWriting))
         dragItem.localObject = attributedString
         return [dragItem]
+    }
+}
+
+extension ViewController: UICollectionViewDropDelegate {
+    func collectionView(_ collectionView: UICollectionView, performDropWith coordinator: UICollectionViewDropCoordinator) {
+        if (collectionView.hasActiveDrag) {
+            if let destinationIndexPath = coordinator.destinationIndexPath {
+                updateDataIndex(from: coordinator.items.first!.sourceIndexPath!, to: destinationIndexPath)
+            }
+        }
+    }
+
+    func collectionView(_ collectionView: UICollectionView,
+                        dropSessionDidUpdate session: UIDropSession,
+                        withDestinationIndexPath destinationIndexPath: IndexPath?) -> UICollectionViewDropProposal {
+        return UICollectionViewDropProposal(operation: .move, intent: .insertAtDestinationIndexPath)
     }
 }
 

@@ -10,4 +10,5 @@ import UIKit
 
 class DragDrogCollectionViewCell: UICollectionViewCell {
     
+    @IBOutlet weak var label: UILabel!
 }
