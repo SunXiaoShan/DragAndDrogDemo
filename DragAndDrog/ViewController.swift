@@ -12,9 +12,10 @@ class ViewController: UIViewController {
 
     @IBOutlet weak var collectionView: UICollectionView!
 
-    var cellDataList:[Int] = [1, 2, 3, 4, 5, 6, 7]
+    var cellDataList:[Int] = [1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14, 15]
+    static let columnCount = 5
     let columnLayout = ColumnFlowLayout(
-        cellsPerRow: 5,
+        cellsPerRow: columnCount,
         minimumInteritemSpacing: 10,
         minimumLineSpacing: 10,
         sectionInset: UIEdgeInsets(top: 10, left: 10, bottom: 10, right: 10)
@@ -57,7 +58,7 @@ extension ViewController: UICollectionViewDataSource {
     func collectionView(_ collectionView: UICollectionView, cellForItemAt indexPath: IndexPath) -> UICollectionViewCell {
         let cell = collectionView.dequeueReusableCell(withReuseIdentifier: "DragDrogCollectionViewCell", for: indexPath) as! DragDrogCollectionViewCell
         cell.backgroundColor = UIColor.yellow
-        cell.label.text = String(cellDataList[indexPath.row])
+        cell.label.text = String(cellDataList[indexPath.section * ViewController.columnCount +  indexPath.row])
         return cell
     }
 }
