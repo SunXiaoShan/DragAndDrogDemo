@@ -75,7 +75,7 @@ extension ViewController: UICollectionViewDataSource {
     func collectionView(_ collectionView: UICollectionView, cellForItemAt indexPath: IndexPath) -> UICollectionViewCell {
         let cell = collectionView.dequeueReusableCell(withReuseIdentifier: "DragDrogCollectionViewCell", for: indexPath) as! DragDrogCollectionViewCell
         let index = indexPath.section * ViewController.columnCount +  indexPath.row
-        cell.backgroundColor = UIColor.black
+        cell.backgroundColor = UIColor.clear
         cell.label.text = ""
         if (index < cellDataList.count) {
             cell.backgroundColor = UIColor.yellow
@@ -88,6 +88,11 @@ extension ViewController: UICollectionViewDataSource {
 
 extension ViewController: UICollectionViewDragDelegate {
     func collectionView(_ collectionView: UICollectionView, itemsForBeginning session: UIDragSession, at indexPath: IndexPath) -> [UIDragItem] {
+        let dataIndex = getCollectionViewColumnMaxCount() * indexPath.section + indexPath.row
+        guard (dataIndex < self.cellDataList.count) else {
+            return []
+        }
+
         let attributedString = String(indexPath.item)
         let dragItem = UIDragItem(itemProvider: NSItemProvider(object: attributedString as NSItemProviderWriting))
         dragItem.localObject = attributedString
